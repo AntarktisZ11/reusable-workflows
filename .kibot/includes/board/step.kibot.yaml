@@ -1,0 +1,8 @@
+kibot:
+  version: 1
+
+outputs:
+  - name: "step_file_of_board"
+    comment: "STEP - CAD file of the assembled board"
+    type: step
+    dir: 3D-Models
