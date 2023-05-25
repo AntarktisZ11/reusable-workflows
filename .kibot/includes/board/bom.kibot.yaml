@@ -1,0 +1,10 @@
+kibot:
+  version: 1
+
+outputs:
+  - name: "ibom"
+    comment: "BOM - Interactive HTML BoM"
+    type: ibom
+    dir: BoM
+    options:
+      dark_mode: true
