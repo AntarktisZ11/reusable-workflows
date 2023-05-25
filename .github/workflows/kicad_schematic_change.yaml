@@ -9,6 +9,10 @@ on:
       BaseFileName:
         required: true
         type: string
+      KiCadProjectDir:
+        required: false
+        type: string
+        default: '.'
 
 jobs:
   Schematic_Documentation_Update:
