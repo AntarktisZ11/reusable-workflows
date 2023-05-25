@@ -1,0 +1,8 @@
+kibot:
+  version: 1
+
+outputs:
+  - name: "print_sch"
+    comment: "PDF - print schematic"
+    type: pdf_sch_print
+    dir: Schematic
