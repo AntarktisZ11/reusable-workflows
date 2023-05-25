@@ -1,0 +1,20 @@
+kibot:
+  version: 1
+
+outputs:
+  - name: "standard_bom"
+    comment: "Standard csv BOM for upload to Octopart or similar"
+    type: bom
+    dir: Schematic
+    options:
+      blacklist: "DNF*"
+      csv:
+        hide_pcb_info: true
+        hide_stats_info: true
+        quote_all: true
+      columns:
+        - Part
+        - field: manf
+          name: Manufacturer
+        - References
+        - Quantity Per PCB
