@@ -36,8 +36,8 @@ jobs:
         with:
           config: .kibot/schematic_outputs.kibot.yaml
           dir: ${{ env.OutputFolder }}
-          schema: pcb/${{ inputs.BaseFileName }}.kicad_sch
-          board: pcb/${{ inputs.BaseFileName }}.kicad_pcb
+          schema: ${{ inputs.KiCadProjectDir }}/${{ inputs.BaseFileName }}.kicad_sch
+          board: ${{ inputs.KiCadProjectDir }}/${{ inputs.BaseFileName }}.kicad_pcb
 
       - name: Store short commit SHA
         id: sha
