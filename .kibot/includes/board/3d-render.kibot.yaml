@@ -1,0 +1,17 @@
+kibot:
+  version: 1
+
+outputs:
+  - name: "3d_render - top"
+    comment: "IMAGE - 3D-rendered image of the assembled board"
+    type: render_3d
+    dir: 3D-Models
+    options:
+      - view: "top"
+      
+  - name: "3d_render - bottom"
+    comment: "IMAGE - 3D-rendered image of the assembled board"
+    type: render_3d
+    dir: 3D-Models
+    options:
+      - view: "bottom"
