@@ -6,7 +6,7 @@ on:
   workflow_call:
     inputs:
       # Set this to the base filename of your project.
-      BaseFileName:
+      KiCadProjectName:
         required: true
         type: string
       KiCadProjectDir:
@@ -36,8 +36,8 @@ jobs:
         with:
           config: .kibot/schematic_outputs.kibot.yaml
           dir: ${{ env.OutputFolder }}
-          schema: ${{ inputs.KiCadProjectDir }}/${{ inputs.BaseFileName }}.kicad_sch
-          board: ${{ inputs.KiCadProjectDir }}/${{ inputs.BaseFileName }}.kicad_pcb
+          schema: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_sch
+          board: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_pcb
 
       - name: Store short commit SHA
         id: sha
@@ -47,5 +47,5 @@ jobs:
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.BaseFileName }}-${{ steps.sha.outputs.sha_short }}
+          name: ${{ inputs.KiCadProjectName }}-${{ steps.sha.outputs.sha_short }}
           path: ${{ env.OutputFolder }}/**
