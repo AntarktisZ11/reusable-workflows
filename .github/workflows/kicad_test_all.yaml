@@ -1,0 +1,51 @@
+# This workflow generates all KiCad documentation that is available
+
+name: "KiBot - Generate KiCad Documentation"
+
+on:
+  workflow_call:
+    inputs:
+      # Set this to the base filename of your project.
+      KiCadProjectName:
+        required: true
+        type: string
+      KiCadProjectDir:
+        required: false
+        type: string
+        default: '.'
+
+jobs:
+  Output_all:
+    env:
+      # Set this to the output folder for all of the generated files. Unless you have a very
+      # good reason to change this you should leave it as KiBotOutput.
+      OutputFolder: KiBotOutput
+    runs-on: ubuntu-latest
+
+    # These are all the steps that generate the files.
+    steps:
+      # Check out the files
+      - uses: actions/checkout@v3
+        # Include submodules due to custom component library being a submodule.
+        with:
+          submodules: true
+
+      # Run KiBot to generate documentation.
+      - name: Generate documentation
+        uses: INTI-CMNB/KiBot@v2_k6
+        with:
+          config: .kibot/output_all.kibot.yaml
+          dir: ${{ env.OutputFolder }}
+          schema: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_sch
+          board: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_pcb
+
+      - name: Store short commit SHA
+        id: sha
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      # Archive all the artifacts from output and attach to the action's results.
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.KiCadProjectName }}-${{ steps.sha.outputs.sha_short }}
+          path: ${{ env.OutputFolder }}/**
