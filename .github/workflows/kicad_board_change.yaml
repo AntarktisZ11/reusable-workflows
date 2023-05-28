@@ -50,3 +50,7 @@ jobs:
         with:
           name: ${{ inputs.KiCadProjectName }}-${{ steps.sha.outputs.sha_short }}
           path: ${{ env.OutputFolder }}/**
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Update Board Documentation
