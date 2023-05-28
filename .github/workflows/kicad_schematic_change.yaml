@@ -1,4 +1,5 @@
-# This workflow generates documentation (PDFs, CSV BOM, etc.) for when schematic was changed.
+# This workflow generates documentation (PDFs, CSV BOM, etc.)
+# for when schematic was changed.
 
 name: "KiBot - Generate KiCad Documentation For Changed Schematic"
 
@@ -38,10 +39,6 @@ jobs:
           dir: ${{ env.OutputFolder }}
           schema: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_sch
           board: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_pcb
-
-      - name: Store short commit SHA
-        id: sha
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
