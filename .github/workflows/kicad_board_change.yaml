@@ -18,9 +18,8 @@ on:
 jobs:
   Board_Documentation_Update:
     env:
-      # Set this to the output folder for all of the generated files. Unless you have a very
-      # good reason to change this you should leave it as KiBotOutput.
-      OutputFolder: KiBotOutput
+      # Set this to the output folder for all of the generated files.
+      OutputFolder: docs
     runs-on: ubuntu-latest
 
     # These are all the steps that generate the files.
@@ -36,7 +35,7 @@ jobs:
         uses: INTI-CMNB/KiBot@v2_k6
         with:
           config: .kibot/board_change.kibot.yaml
-          dir: ${{ env.OutputFolder }}
+          dir: ${{ inputs.KiCadProjectDir }}/${{ env.OutputFolder }}
           schema: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_sch
           board: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_pcb
 
