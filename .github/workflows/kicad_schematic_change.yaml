@@ -12,7 +12,7 @@ on:
       KiCadProjectDir:
         required: false
         type: string
-        default: '.'
+        default: "."
 
 jobs:
   Schematic_Documentation_Update:
@@ -43,9 +43,6 @@ jobs:
         id: sha
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      # Archive all the artifacts from output and attach to the action's results.
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+      - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          name: ${{ inputs.KiCadProjectName }}-${{ steps.sha.outputs.sha_short }}
-          path: ${{ env.OutputFolder }}/**
+          commit_message: Update Schematic Documentation
