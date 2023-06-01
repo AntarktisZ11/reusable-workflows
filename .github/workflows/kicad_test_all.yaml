@@ -12,7 +12,11 @@ on:
       KiCadProjectDir:
         required: false
         type: string
-        default: '.'
+        default: "."
+      KiBot-Verbosity:
+        required: false
+        type: string
+        default: 0
 
 jobs:
   Output_all:
@@ -38,6 +42,7 @@ jobs:
           dir: ${{ env.OutputFolder }}
           schema: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_sch
           board: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_pcb
+          verbose: ${{ inputs.KiBot-Verbosity }}
 
       - name: Store short commit SHA
         id: sha
