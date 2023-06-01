@@ -6,15 +6,17 @@ name: "KiBot - Generate KiCad Documentation For Changed Board"
 on:
   workflow_call:
     inputs:
-      # Set this to the base filename of your project.
       KiCadProjectName:
+        description: The base filename of your project without extension (i.e. <KiCadProjectName>.kicad_pro).
         required: true
         type: string
       KiCadProjectDir:
+        description: Path to the KiCad project directory relative to repository root.
         required: false
         type: string
         default: "."
       KiBot-Verbosity:
+        description: Level of KiBot verbosity. Valid values are 0, 1, 2 or 3. Default is 0.
         required: false
         type: string
         default: 0
