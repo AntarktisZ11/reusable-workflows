@@ -1,0 +1,75 @@
+# This workflow generates documentation (PDFs, CSV BOM, interactive BOM, 3D-Renders, etc.)
+# for when PCB was changed.
+
+name: "KiBot - Generate KiCad Documentation For Changed PCB"
+
+on:
+  workflow_call:
+    inputs:
+      KiCadProjectName:
+        description: The base filename of your project without extension (i.e. <KiCadProjectName>.kicad_pro).
+        required: true
+        type: string
+      KiCadProjectDir:
+        description: Path to the KiCad project directory relative to repository root.
+        required: false
+        type: string
+        default: "."
+      KiBot-Verbosity:
+        description: Level of KiBot verbosity. Valid values are 0, 1, 2 or 3. Default is 0.
+        required: false
+        type: string
+        default: 0
+
+jobs:
+  Schematic_Documentation_Update:
+    env:
+      # Set this to the output folder for all of the generated files.
+      OutputFolder: ${{ inputs.KiCadProjectDir }}/docs
+      Schema: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_sch
+      Board: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_pcb
+    runs-on: ubuntu-latest
+
+    # These are all the steps that generate the files.
+    steps:
+      # Check out the files
+      - uses: actions/checkout@v3
+        # Include submodules due to custom component library being a submodule.
+        with:
+          submodules: true
+
+      # Create boolean for if the filetype
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            schematic:
+              - "**.kicad_sch"
+            board:
+              - "**.kicad_pcb"
+
+      # Run KiBot to generate schematic documentation.
+      - if: steps.filter.outputs.schematic == 'true'
+        name: Generate schematic documentation
+        uses: INTI-CMNB/KiBot@v2_k6
+        with:
+          config: .kibot/schematic_change.kibot.yaml
+          dir: ${{ env.OutputFolder }}
+          schema: ${{ env.Schema }}
+          board: ${{ env.Board }}
+          verbose: ${{ inputs.KiBot-Verbosity }}
+
+      # Run KiBot to generate board documentation.
+      - if: steps.filter.outputs.board == 'true'
+        name: Generate board documentation
+        uses: INTI-CMNB/KiBot@v2_k6
+        with:
+          config: .kibot/board_change.kibot.yaml
+          dir: ${{ env.OutputFolder }}
+          schema: ${{ env.Schema }}
+          board: ${{ env.Board }}
+          verbose: ${{ inputs.KiBot-Verbosity }}
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Update PCB Documentation
