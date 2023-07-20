@@ -22,7 +22,7 @@ on:
         default: 0
 
 jobs:
-  Schematic_Documentation_Update:
+  PCB_Documentation_Update:
     env:
       # Set this to the output folder for all of the generated files.
       OutputFolder: ${{ inputs.KiCadProjectDir }}/docs
@@ -39,7 +39,8 @@ jobs:
           submodules: true
 
       # Create boolean for if the filetype
-      - uses: dorny/paths-filter@v2
+      - name: Paths Changes Filter
+        uses: dorny/paths-filter@v2
         id: filter
         with:
           filters: |
