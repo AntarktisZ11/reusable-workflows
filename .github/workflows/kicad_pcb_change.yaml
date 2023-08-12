@@ -30,7 +30,9 @@ on:
         default: kibot-gen
 
     outputs:
-      artifact_uploaded: ${{ steps.check_uploaded.outputs.uploaded }}
+      artifact_uploaded:
+        description: "Boolean for if an artifact was uploaded."
+        value: ${{ jobs.Generate_PCB_Documentation.outputs.artifact_uploaded }}
 
 jobs:
   Generate_PCB_Documentation:
@@ -40,6 +42,9 @@ jobs:
       Schema: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_sch
       Board: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_pcb
     runs-on: ubuntu-latest
+
+    outputs:
+      artifact_uploaded: ${{ steps.check_uploaded.outputs.uploaded }}
 
     # These are all the steps that generate the files.
     steps:
