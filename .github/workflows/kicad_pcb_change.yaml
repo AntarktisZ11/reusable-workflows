@@ -20,12 +20,17 @@ on:
         required: false
         type: string
         default: 0
+      Artifact-name:
+        description: The name to be used in actions/upload-artifact. (Same as actions/download-artifact)
+        required: false
+        type: string
+        default: kibot-gen
 
 jobs:
-  PCB_Documentation_Update:
+  Generate_PCB_Documentation:
     env:
       # Set this to the output folder for all of the generated files.
-      OutputFolder: ${{ inputs.KiCadProjectDir }}/docs
+      OutputFolder: ${{ inputs.KiCadProjectDir }}/.kibot-gen/docs
       Schema: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_sch
       Board: ${{ inputs.KiCadProjectDir }}/${{ inputs.KiCadProjectName }}.kicad_pcb
     runs-on: ubuntu-latest
@@ -45,13 +50,13 @@ jobs:
         with:
           filters: |
             schematic:
-              - "**.kicad_sch"
+              - ${{ env.Schema }}
             board:
-              - "**.kicad_pcb"
+              - ${{ env.Board }}
 
       # Run KiBot to generate schematic documentation.
-      - if: steps.filter.outputs.schematic == 'true'
-        name: Generate schematic documentation
+      - name: Generate schematic documentation
+        if: steps.filter.outputs.schematic == 'true'
         uses: INTI-CMNB/KiBot@v2_k6
         with:
           config: .kibot/schematic_change.kibot.yaml
@@ -61,8 +66,8 @@ jobs:
           verbose: ${{ inputs.KiBot-Verbosity }}
 
       # Run KiBot to generate board documentation.
-      - if: steps.filter.outputs.board == 'true'
-        name: Generate board documentation
+      - name: Generate board documentation
+        if: steps.filter.outputs.board == 'true'
         uses: INTI-CMNB/KiBot@v2_k6
         with:
           config: .kibot/board_change.kibot.yaml
@@ -71,6 +76,8 @@ jobs:
           board: ${{ env.Board }}
           verbose: ${{ inputs.KiBot-Verbosity }}
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Upload PCB Documentation artifact
+        uses: actions/upload-artifact@v3
         with:
-          commit_message: Update PCB Documentation
+          name: ${{ inputs.Artifact-name }}
+          path: ${{ env.OutputFolder }}
