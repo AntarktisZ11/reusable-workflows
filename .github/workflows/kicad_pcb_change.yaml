@@ -10,21 +10,27 @@ on:
         description: The base filename of your project without extension (i.e. <KiCadProjectName>.kicad_pro).
         required: true
         type: string
+
       KiCadProjectDir:
         description: Path to the KiCad project directory relative to repository root.
         required: false
         type: string
         default: "."
+
       KiBot-Verbosity:
         description: Level of KiBot verbosity. Valid values are 0, 1, 2 or 3. Default is 0.
         required: false
         type: string
         default: 0
+
       Artifact-name:
         description: The name to be used in actions/upload-artifact. (Same as actions/download-artifact)
         required: false
         type: string
         default: kibot-gen
+
+    outputs:
+      artifact_uploaded: ${{ steps.check_uploaded.outputs.uploaded }}
 
 jobs:
   Generate_PCB_Documentation:
@@ -81,3 +87,11 @@ jobs:
         with:
           name: ${{ inputs.Artifact-name }}
           path: ${{ env.OutputFolder }}
+
+      - name: Check for successful upload
+        id: check_uploaded
+        run: >
+          if [ $(find ${{ env.OutputFolder }} -type f | wc -l) -eq 0 ] ;
+            then echo "uploaded=false" >> "$GITHUB_OUTPUT" ;
+            else echo "uploaded=true" >> "$GITHUB_OUTPUT" ;
+          fi
