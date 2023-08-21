@@ -68,7 +68,7 @@ jobs:
       # Run KiBot to generate schematic documentation.
       - name: Generate schematic documentation
         if: steps.filter.outputs.schematic == 'true'
-        uses: INTI-CMNB/KiBot@v2_k6
+        uses: INTI-CMNB/KiBot@v2_k7
         with:
           config: .kibot/schematic_change.kibot.yaml
           dir: ${{ env.OutputFolder }}
@@ -79,7 +79,7 @@ jobs:
       # Run KiBot to generate board documentation.
       - name: Generate board documentation
         if: steps.filter.outputs.board == 'true'
-        uses: INTI-CMNB/KiBot@v2_k6
+        uses: INTI-CMNB/KiBot@v2_k7
         with:
           config: .kibot/board_change.kibot.yaml
           dir: ${{ env.OutputFolder }}
